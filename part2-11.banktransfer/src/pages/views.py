@@ -6,16 +6,15 @@ from .models import Account
 
 # Create your views here.
 
-def transfer(sender, receiver, amount):
-	acc1 = Account.objects.get(iban=sender)
-	acc2 = Account.objects.get(iban=receiver)
-
-
-	acc1.balance -= amount
-	acc2.balance += amount
-
-	acc1.save()
-	acc2.save()
+def transfer(sender, receiver, amount): 
+    with transaction.atomic():
+        acc1 = Account.objects.get(iban=sender)
+        acc2 = Account.objects.get(iban=receiver)
+        if amount > 0 and amount <= acc1.balance:
+            acc1.balance -= amount
+            acc2.balance += amount
+        acc1.save()
+        acc2.save()
 
 
 def homePageView(request):

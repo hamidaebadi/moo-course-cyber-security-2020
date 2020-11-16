@@ -10,9 +10,14 @@ import json
 
 @login_required
 def addView(request):
-	return redirect('/')
+    iban_num = request.POST.get('iban')
+    user = request.POST.get('user')
+    #Account.objects.create(owner = user, iban = iban_num)
+    return redirect('/')
 
 
 @login_required
 def homePageView(request):
-	return render(request, 'pages/index.html')
+    user = request.POST.get('user')
+    owned_accs = Account.objects.filter(owner__first_name = user)
+    return render(request, 'pages/index.html', {'accounts': owned_accs})

